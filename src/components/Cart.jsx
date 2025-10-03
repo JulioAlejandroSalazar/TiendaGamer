@@ -1,39 +1,51 @@
-import React from "react";
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
 
-const Cart = ({ cart, removeFromCart }) => {
-  const totalPrice = cart.reduce((sum, item) => sum + item.discountPrice, 0);
+// componente que muestra el carrito de compras
+function Cart({ cart, removeFromCart }) {
+  // si el carrito esta vacio, mostrar mensaje
+  if (cart.length === 0) {
+    return <h4 className="text-center mt-4">Tu carrito está vacío</h4>;
+  }
+
+  // calcular total del carrito
+  const total = cart.reduce((sum, item) => sum + item.precio, 0);
 
   return (
-    <div>
-      <h4>
-        Carrito de compras{" "}
-        <span className="badge bg-primary">{cart.length}</span>
-      </h4>
-      {cart.length === 0 ? (
-        <p>El carrito está vacío</p>
-      ) : (
-        <>
-          <ul className="list-group mb-3">
-            {cart.map((item, index) => (
-              <li
-                key={index}
-                className="list-group-item d-flex justify-content-between align-items-center"
+    <Card className="shadow">
+      <Card.Body>
+        <Card.Title>Carrito de compras</Card.Title>
+
+        {/* lista de productos en el carrito */}
+        <ListGroup variant="flush" className="mb-3">
+          {cart.map((item) => (
+            <ListGroup.Item
+              key={item.id}
+              className="d-flex justify-content-between align-items-center"
+            >
+              <span>{item.titulo} - ${item.precio}</span>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => removeFromCart(item.id)}
               >
-                {item.name} - ${item.discountPrice.toLocaleString()}
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => removeFromCart(index)}
-                >
-                  X
-                </button>
-              </li>
-            ))}
-          </ul>
-          <p className="fw-bold">Total: ${totalPrice.toLocaleString()}</p>
-        </>
-      )}
-    </div>
+                X
+              </Button>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+
+        {/* mostrar total */}
+        <h5>Total: ${total}</h5>
+
+        {/* botón para finalizar compra */}
+        <Button variant="success" className="mt-2">
+          Finalizar compra
+        </Button>
+      </Card.Body>
+    </Card>
   );
-};
+}
 
 export default Cart;
